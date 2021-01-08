@@ -15,6 +15,8 @@ import com.google.gson.GsonBuilder;
 public class BlockChain {
 
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
+    public static int difficulty = 5;
+
 
     public static void main(String[] args) {
 
@@ -31,21 +33,28 @@ public class BlockChain {
 
         Block currentBlock;
         Block previousBlock;
+        String hashTarget = new String(new char[difficulty]).replace('\0', '0');
 
         for (int i = 1; i < blockchain.size(); i++) {
             currentBlock = blockchain.get(i);
             previousBlock = blockchain.get(i - 1);
 
-            if (!currentBlock.hash.equals(currentBlock.calculatedHash())) {
+            if (!currentBlock.hash.equals(currentBlock.calculateHash())) {
                 System.out.println("Current hash isnt equal");
                 return false;
             }
 
-            if (!previousBlock.hash.equals(currentBlock.calculatedHash())) {
-                System.out.println("Current hash ");
+            if (!previousBlock.hash.equals(currentBlock.calculateHash())) {
+                System.out.println("Current hash inst equal");
+                return false;
+            }
+
+            if(!currentBlock.hash.substring( 0, difficulty).equals(hashTarget)) {
+                System.out.println("This block hasn't been mined");
                 return false;
             }
         }
         return true;
     }
+
 }
