@@ -9,7 +9,7 @@ public class Wallet {
     public PrivateKey privateKey;
     public PublicKey publicKey;
 
-    public HashMap <String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>();
+    public HashMap <String, TransactionOutput> UTXOs = new HashMap<>();
 
 
 
@@ -52,7 +52,7 @@ public class Wallet {
         }
 
 
-        ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
+        ArrayList<TransactionInput> inputs = new ArrayList<>();
         float total = 0;
 
         for (Map.Entry<String, TransactionOutput> item : UTXOs.entrySet()) {

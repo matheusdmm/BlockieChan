@@ -6,7 +6,7 @@ public class Block {
     public String hash;
     public String previousHash;
     public String merkleRoot;
-    public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    public ArrayList<Transaction> transactions = new ArrayList<>();
     public long timeStamp;
     public int nonce;
 
@@ -17,13 +17,12 @@ public class Block {
     }
 
     public String calculateHash() {
-        String calculatedhash = StringUtil.applySha256(
+        return StringUtil.applySha256(
                 previousHash +
-                        Long.toString(timeStamp) +
-                        Integer.toString(nonce) +
+                        timeStamp +
+                        nonce +
                         merkleRoot
         );
-        return calculatedhash;
     }
 
     public void mineBlock(int difficulty) {
@@ -36,18 +35,17 @@ public class Block {
         System.out.println("Block mined: " + hash);
     }
 
-    public boolean addTransaction (Transaction transaction) {
-        if (transaction == null) return false;
-        if ((previousHash != "0")) {
-            if ((transaction.processTransaction() != true)) {
+    public void addTransaction (Transaction transaction) {
+        if (transaction == null) return;
+        if ((!previousHash.equals("0"))) {
+            if ((!transaction.processTransaction())) {
                 System.out.println("Transaction failed to process. Discarted.");
-                return false;
+                return;
             }
         }
 
         transactions.add(transaction);
         System.out.println("Transaction successfully added to block.");
-        return true;
     }
 
 

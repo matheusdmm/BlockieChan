@@ -1,7 +1,5 @@
 import java.security.*;
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class Transaction {
 
@@ -11,8 +9,8 @@ public class Transaction {
     public float value;
     public byte[] signature;
 
-    public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
-    public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
+    public ArrayList<TransactionInput> inputs;
+    public ArrayList<TransactionOutput> outputs = new ArrayList<>();
 
     private static int sequence = 0;
 
@@ -28,7 +26,7 @@ public class Transaction {
         return StringUtil.applySha256(
                 StringUtil.getStringFromKey(sender) +
                         StringUtil.getStringFromKey(recipient) +
-                        Float.toString(value) +
+                        value +
                         sequence
         );
     }
@@ -36,19 +34,19 @@ public class Transaction {
     public void generateSignature(PrivateKey privateKey) {
         String data = StringUtil.getStringFromKey(sender) +
                 StringUtil.getStringFromKey(recipient) +
-                Float.toString(value);
+                value;
         signature = StringUtil.applyECDSASig(privateKey, data);
     }
 
     public boolean verifySignature() {
         String data = StringUtil.getStringFromKey(sender) +
                 StringUtil.getStringFromKey(recipient) +
-                Float.toString(value);
-        return StringUtil.verifyECDSASig(sender, data, signature);
+                value;
+        return !StringUtil.verifyECDSASig(sender, data, signature);
     }
 
     public boolean processTransaction() {
-        if (verifySignature() == false) {
+        if (verifySignature()) {
             System.out.println("#Transaction Signature failed");
             return false;
         }
