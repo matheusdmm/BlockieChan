@@ -42,7 +42,7 @@ public class BlockChain {
         transaction.generateSignature(walletA.privateKey);
 
         System.out.println("Is signature verified");
-        System.out.println(transaction.verifiySignature());
+        System.out.println(transaction.verifySignature());
 
     }
 
