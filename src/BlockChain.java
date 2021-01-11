@@ -3,14 +3,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
+    Matheus - 2021
+
+
+
     Inspired by the work of CryptoKass at https://medium.com/programmers-blockchain/create-simple-blockchain-java-tutorial-from-scratch-6eeed3cb03fa
     Made mostly to learn how a proto blockchain works
 
-    You gonna need to have Gson to make the code work properly.
-
-
-
-    Matheus - 2021
+    You gonna need to have Gson and BouncyCastle to make the code work and compile properly.
 */
 
 public class BlockChain {
@@ -22,21 +22,21 @@ public class BlockChain {
         UTXOs = new HashMap<>();
     }
 
-    public static int difficulty = 3;
+    public static int difficulty = 5;
     public static float minimumTransaction = 0.1f;
-    public static Wallet walletA;
-    public static Wallet walletB;
+    public static Wallet Movements;
+    public static Wallet LaDispute;
     public static Transaction genesisTransaction;
 
     public static void main(String[] args) {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        walletA = new Wallet();
-        walletB = new Wallet();
+        Movements = new Wallet();
+        LaDispute = new Wallet();
         Wallet coinbase = new Wallet();
 
-        genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
+        genesisTransaction = new Transaction(coinbase.publicKey, Movements.publicKey, 100f, null);
         genesisTransaction.generateSignature(coinbase.privateKey);
         genesisTransaction.transactionId = "0";
         genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.recipient, genesisTransaction.value, genesisTransaction.transactionId));
@@ -48,25 +48,25 @@ public class BlockChain {
         addBlock(genesis);
 
         Block block1 = new Block(genesis.hash);
-        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-        System.out.println("\nWalletA is Attempting to send funds (40) to WalletB...");
-        block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+        System.out.println("\nMovements balance is: " + Movements.getBalance());
+        System.out.println("\nMovements is Attempting to send funds (65) to WalletB.");
+        block1.addTransaction(Movements.sendFunds(LaDispute.publicKey, 65f));
         addBlock(block1);
-        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-        System.out.println("WalletB's balance is: " + walletB.getBalance());
+        System.out.println("\nMovements balance is: " + Movements.getBalance());
+        System.out.println("LaDispute balance is: " + LaDispute.getBalance());
 
         Block block2 = new Block(block1.hash);
-        System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
-        block2.addTransaction(walletA.sendFunds(walletB.publicKey, 1000f));
+        System.out.println("\nMovements Attempting to send more funds (980) than it has.");
+        block2.addTransaction(Movements.sendFunds(LaDispute.publicKey, 980f));
         addBlock(block2);
-        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-        System.out.println("WalletB's balance is: " + walletB.getBalance());
+        System.out.println("\nMovements balance is: " + Movements.getBalance());
+        System.out.println("LaDispute balance is: " + LaDispute.getBalance());
 
         Block block3 = new Block(block2.hash);
-        System.out.println("\nWalletB is Attempting to send funds (20) to WalletA...");
-        block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
-        System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-        System.out.println("WalletB's balance is: " + walletB.getBalance());
+        System.out.println("\nLaDispute is Attempting to send funds (20) to Movements.");
+        block3.addTransaction(LaDispute.sendFunds( Movements.publicKey, 20));
+        System.out.println("\nMovements balance is: " + Movements.getBalance());
+        System.out.println("LaDispute balance is: " + LaDispute.getBalance());
 
         isChainValid();
 
@@ -87,7 +87,7 @@ public class BlockChain {
             previousBlock = blockchain.get(i - 1);
 
             if (!currentBlock.hash.equals(currentBlock.calculateHash())) {
-                System.out.println("Current hash isnt equal");
+                System.out.println("Current hash isn't equal");
                 return;
             }
 
